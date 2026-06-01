@@ -1,6 +1,7 @@
 #include "WorldBuilder.h"
 #include "Passage.h"
 #include "Item.h"
+#include "Door.h"
 
 std::vector<std::shared_ptr<Room>> WorldBuilder::rooms;
 
@@ -60,17 +61,23 @@ std::shared_ptr<Room> WorldBuilder::buildWorld() {
 
     // Inside the palace (Entering via the ajar door using "in")
     Passage::createBasicPassage(palace_entrance.get(), diwan_i_aam.get(), "in", true);
-    Passage::createBasicPassage(diwan_i_aam.get(), sheesh_mahal.get(), "west", true);
+    
+    // locked door from Diwan-i-Aam to Sheesh Mahal
+    auto door_to_sheesh = std::make_shared<Door>("door-to-sheesh", "A beautiful ivory-inlaid door, firmly locked.", diwan_i_aam.get(), sheesh_mahal.get(), "bronze-key");
+    diwan_i_aam->addPassage("west", door_to_sheesh);
+    auto door_from_sheesh = std::make_shared<Door>("door-from-sheesh", "A beautiful ivory-inlaid door, firmly locked.", sheesh_mahal.get(), diwan_i_aam.get(), "bronze-key");
+    sheesh_mahal->addPassage("east", door_from_sheesh);
+
     Passage::createBasicPassage(sheesh_mahal.get(), palace_roof.get(), "up", true);
 
-    // === CREATE AND PLACE PUZZLE ITEMS ===
+    // CREATE AND PLACE PUZZLE ITEMS
     auto bamboo_pole = std::make_shared<Item>("bamboo-pole", "A long, sturdy bamboo pole, perhaps once used by gardeners.");
     garden_path->addItem(bamboo_pole);
 
     auto brass_bowl = std::make_shared<Item>("brass-bowl", "An intricately carved antique brass bowl.");
     sheesh_mahal->addItem(brass_bowl);
 
-    // For now, the key is just sitting up in the tree (we'll implement the knock-down puzzle logic later)
+    // For now, the key is just sitting up in the tree 
     auto bronze_key = std::make_shared<Item>("bronze-key", "A heavy, ornate bronze key. It looks like it fits the lock on the Sun Gate.");
     up_banyan_tree->addItem(bronze_key);
 

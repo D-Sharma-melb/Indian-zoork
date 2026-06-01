@@ -10,6 +10,8 @@
 #include <iostream>
 #include <memory>
 
+class Player;
+
 class Passage : public Location {
 public:
     static void
@@ -18,6 +20,8 @@ public:
     Passage(const std::string &, const std::string &, Room*, Room*);
 
     Passage(const std::string &, const std::string &, std::shared_ptr<Command>, Room*, Room*);
+
+    virtual bool canEnter(Player* player) const;
 
     void setFrom(Room*);
 

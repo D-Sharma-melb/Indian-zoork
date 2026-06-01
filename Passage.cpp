@@ -7,6 +7,7 @@
 #include <utility>
 #include "PassageDefaultEnterCommand.h"
 #include <memory>
+#include "Player.h"
 
 std::string Passage::oppositeDirection(const std::string &s) {
     if (s == "north") return "south";
@@ -40,6 +41,10 @@ Passage::Passage(const std::string &n, const std::string &d, Room* from, Room* t
 Passage::Passage(const std::string &n, const std::string &d, std::shared_ptr<Command> c, Room* from,
                  Room* to)
         : Location(n, d, std::move(c)), fromRoom(from), toRoom(to) {}
+
+bool Passage::canEnter(Player* player) const {
+    return true; // Default passages can always be entered
+}
 
 void Passage::setFrom(Room* r) {
     fromRoom = r;

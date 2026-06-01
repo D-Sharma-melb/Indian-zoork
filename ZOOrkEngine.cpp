@@ -40,11 +40,6 @@ void ZOOrkEngine::run() {
             handleUseCommand(arguments);
         } else if (command == "quit") {
             handleQuitCommand(arguments);
-        } else if (command == "n" || command == "north" || command == "s" || command == "south" ||
-                   command == "e" || command == "east"  || command == "w" || command == "west"  ||
-                   command == "u" || command == "up"    || command == "d" || command == "down"  ||
-                   command == "in" || command == "out") {
-            handleGoCommand({command});
         } else {
             std::cout << "I don't understand that command.\n";
         }
@@ -70,14 +65,22 @@ void ZOOrkEngine::handleGoCommand(std::vector<std::string> arguments) {
         direction = "up";
     } else if (arguments[0] == "d" || arguments[0] == "down") {
         direction = "down";
-    } else {
+    } else if (arguments[0] == "i" || arguments[0] == "in") {
+        direction = "in";
+    } else if (arguments[0] == "o" || arguments[0] == "out") {
+        direction = "out";
+    }
+     else {
         direction = arguments[0];
     }
 
     Room* currentRoom = player->getCurrentRoom();
     auto passage = currentRoom->getPassage(direction);
-    player->setCurrentRoom(passage->getTo());
-    passage->enter();
+    
+    if (passage->canEnter(player)) {
+        player->setCurrentRoom(passage->getTo());
+        passage->enter();
+    }
 }
 
 void ZOOrkEngine::handleLookCommand(std::vector<std::string> arguments) {
